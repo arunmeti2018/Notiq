@@ -295,6 +295,22 @@ router.post("/pages", isAuthorized(["admin", "editor"]), upload.single("featured
   }
 })
 
+// Image upload endpoint for markdown editor
+router.post('/upload-image', isAuthenticated, upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Return the URL of the uploaded image
+    const imageUrl = `/uploads/${req.file.filename}`;
+    res.json({ url: imageUrl });
+  } catch (error) {
+    console.error('Image upload error:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
+
 // Edit page form
 router.get("/pages/:id/edit", isAuthorized(["admin", "editor"]), async (req, res) => {
   try {
