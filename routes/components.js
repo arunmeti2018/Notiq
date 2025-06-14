@@ -3,7 +3,7 @@ const router = express.Router()
 
 router.get("/", (req, res) => {
   res.render("components", {
-    title: "Components | Minimal Docs Site",
+    title: "Components | Notiq",
     currentPath: "/components",
   })
 })

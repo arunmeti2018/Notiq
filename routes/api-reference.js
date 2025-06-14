@@ -3,7 +3,7 @@ const router = express.Router()
 
 router.get("/", (req, res) => {
   res.render("api-reference", {
-    title: "API Reference | Minimal Docs Site",
+    title: "API Reference | Notiq",
     currentPath: "/api-reference",
   })
 })

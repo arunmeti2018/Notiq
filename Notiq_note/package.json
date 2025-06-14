@@ -1,7 +1,7 @@
 {
-  "name": "placement-prep-hub",
+  "name": "notiq-notes-generation",
   "version": "1.0.0",
-  "description": "AI-Powered Placement Prep Hub",
+  "description": "AI-Powered Notiq notes generation",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
