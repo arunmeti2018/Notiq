@@ -166,25 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById("mobileMenuBtn")
-  const sidebar = document.querySelector(".admin-sidebar")
-
-  if (mobileMenuBtn && sidebar) {
-    mobileMenuBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("open")
-    })
-
-    // Close sidebar when clicking outside
-    document.addEventListener("click", (e) => {
-      if (window.innerWidth <= 768) {
-        if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-          sidebar.classList.remove("open")
-        }
-      }
-    })
-  }
-
   // Tooltip functionality
   const tooltips = document.querySelectorAll("[data-tooltip]")
   tooltips.forEach((element) => {
@@ -248,119 +229,157 @@ document.addEventListener("DOMContentLoaded", () => {
         // Handle drag events
         markdownEditor.addEventListener('dragenter', function (e) {
           e.preventDefault();
-          e.stopPropagation();
           dropZone.style.display = 'block';
-        });
-
-        markdownEditor.addEventListener('dragover', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
         });
 
         markdownEditor.addEventListener('dragleave', function (e) {
           e.preventDefault();
-          e.stopPropagation();
-          if (!this.contains(e.relatedTarget)) {
+          // Check if the drag is truly leaving the editor area
+          const rect = markdownEditor.getBoundingClientRect();
+          if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
             dropZone.style.display = 'none';
           }
         });
 
         markdownEditor.addEventListener('drop', function (e) {
           e.preventDefault();
-          e.stopPropagation();
           dropZone.style.display = 'none';
-
-          const files = e.dataTransfer.files;
-          if (files.length > 0) {
-            const file = files[0];
-            if (file.type.startsWith('image/')) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                const imageUrl = e.target.result;
-                const imageMarkdown = `![${file.name}](${imageUrl})`;
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                const text = this.value;
-                this.value = text.substring(0, start) + imageMarkdown + text.substring(end);
-                this.selectionStart = this.selectionEnd = start + imageMarkdown.length;
-                updatePreview();
-              }.bind(this);
-              reader.readAsDataURL(file);
-            }
+          const file = e.dataTransfer.files[0];
+          if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              const imageUrl = event.target.result;
+              const markdownImage = `![Alt Text](${imageUrl})`;
+              // Insert markdown image into textarea at cursor position
+              const start = markdownEditor.selectionStart;
+              const end = markdownEditor.selectionEnd;
+              markdownEditor.value = markdownEditor.value.substring(0, start) +
+                markdownImage +
+                markdownEditor.value.substring(end);
+              markdownEditor.selectionStart = markdownEditor.selectionEnd = start + markdownImage.length;
+              updatePreview();
+            };
+            reader.readAsDataURL(file);
+          } else if (file) {
+            alert('Only image files are supported for drag and drop.');
           }
         });
 
-        // Preview functionality
-        previewBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          markdownEditor.style.display = 'none';
-          previewContent.style.display = 'block';
-          previewBtn.style.display = 'none';
-          editBtn.style.display = 'inline-block';
-          updatePreview();
+        // Preview/Edit toggle
+        previewBtn.addEventListener('click', function () {
+          const markdown = markdownEditor.value;
+          const cleanHtml = DOMPurify.sanitize(marked.parse(markdown));
+          previewContent.innerHTML = cleanHtml;
+          markdownEditor.classList.add('hidden');
+          previewContent.classList.remove('hidden');
+          previewBtn.classList.add('hidden');
+          editBtn.classList.remove('hidden');
         });
 
-        editBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          markdownEditor.style.display = 'block';
-          previewContent.style.display = 'none';
-          previewBtn.style.display = 'inline-block';
-          editBtn.style.display = 'none';
+        editBtn.addEventListener('click', function () {
+          markdownEditor.classList.remove('hidden');
+          previewContent.classList.add('hidden');
+          editBtn.classList.add('hidden');
+          previewBtn.classList.remove('hidden');
         });
 
-        // Update preview on input
-        markdownEditor.addEventListener('input', updatePreview);
+        // Initial preview if content exists
+        if (markdownEditor.value.trim() !== '') {
+          // updatePreview();
+          // Temporarily removed initial preview to prevent flicker/render issues
+        }
 
-        // Initial preview update
-        updatePreview();
-
+        // Helper function for preview update (if needed elsewhere)
         function updatePreview() {
           const markdown = markdownEditor.value;
-          const html = marked.parse(markdown);
-          const sanitizedHtml = DOMPurify.sanitize(html);
-          previewContent.innerHTML = sanitizedHtml;
+          const cleanHtml = DOMPurify.sanitize(marked.parse(markdown));
+          previewContent.innerHTML = cleanHtml;
         }
 
-        // Template selection
-        const templateSelect = document.getElementById('template');
-        if (templateSelect) {
-          templateSelect.addEventListener('change', function () {
-            const templateId = this.value;
-            if (templateId) {
-              fetchTemplateContent(templateId);
-            }
-          });
+        // Initial check for preview if on edit page and has content
+        if (document.body.classList.contains('edit-page') && markdownEditor.value.trim() !== '') {
+          updatePreview();
         }
 
-        function fetchTemplateContent(templateId) {
-          fetch(`/admin/templates/${templateId}/content`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.content) {
-                markdownEditor.value = data.content;
-                updatePreview();
-              }
-            })
-            .catch(error => {
-              console.error('Error fetching template:', error);
-              showNotification('Failed to load template content', 'error');
-            });
-        }
+        // Attach updatePreview to markdownEditor input for live updates
+        markdownEditor.addEventListener('input', updatePreview);
+
       }
     }, 100); // Check every 100ms
   }
-});
 
+  // Admin Mobile sidebar toggle
+  const adminMobileMenuBtn = document.getElementById('adminMobileMenuBtn');
+  const sidebar = document.querySelector('.fixed.inset-y-0.z-50.flex.w-64'); // Specific selector for admin sidebar
+
+  if (adminMobileMenuBtn && sidebar) {
+    adminMobileMenuBtn.addEventListener('click', function () {
+      // Toggle sidebar visibility
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+      } else {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+      }
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function (event) {
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      const isClickInsideSidebar = sidebar.contains(event.target);
+      const isClickOnMenuButton = adminMobileMenuBtn.contains(event.target);
+
+      if (isMobile && !isClickInsideSidebar && !isClickOnMenuButton) {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+      }
+    });
+
+    // Handle window resize for desktop view
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+      } else {
+        sidebar.classList.remove('translate-x-0');
+        sidebar.classList.add('-translate-x-full');
+      }
+    });
+  }
+
+  // Notification functions
 function showNotification(message, type = "info") {
-  const notification = document.createElement("div");
-  notification.className = `fixed top-4 right-4 p-4 rounded shadow-lg ${type === "error" ? "bg-red-500" : "bg-green-500"
-    } text-white`;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  setTimeout(() => notification.remove(), 3000);
+    const notificationContainer = document.getElementById("notificationContainer");
+    if (!notificationContainer) {
+      console.warn("Notification container not found.");
+      return;
+    }
+
+    const notification = document.createElement("div");
+    notification.className = `p-3 rounded-md shadow-md text-white flex items-center justify-between mt-2 fade-in fade-out 
+            ${type === 'success' ? 'bg-green-500' : type === 'danger' ? 'bg-red-500' : 'bg-blue-500'}`;
+    notification.innerHTML = `<span>${message}</span>
+                            <button class="ml-4 text-white opacity-75 hover:opacity-100" onclick="this.parentElement.remove()">
+                                &times;
+                            </button>`;
+
+    notificationContainer.appendChild(notification);
+
+  setTimeout(() => {
+      notification.remove();
+    }, 5000);
 }
 
+  // Expose notification to global scope if needed (e.g., from EJS)
+  window.showNotification = showNotification;
+
+  // Date formatting function
 function formatDate(dateString) {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-}
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  // Expose formatDate to global scope
+  window.formatDate = formatDate;
+});

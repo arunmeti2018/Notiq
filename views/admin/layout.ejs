@@ -53,13 +53,14 @@
 <body class="bg-gray-50">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-lg">
+        <div
+            class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 -translate-x-full">
             <div class="p-6 border-b">
                 <h1 class="text-xl font-bold text-gray-800">Admin Panel</h1>
                 <p class="text-sm text-gray-600">Welcome, <%= user.username %>
                 </p>
             </div>
-            <nav class="mt-6">
+            <nav class="mt-6 flex-1 overflow-y-auto">
                 <% const navItems=[ { name: 'Dashboard' , href: '/admin/dashboard' }, { name: 'Pages' ,
                     href: '/admin/pages' }, { name: 'Templates' , href: '/admin/templates' } ] %>
                     <% navItems.forEach(item=> { %>
@@ -98,9 +99,44 @@
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
-            <main class="p-8">
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
+            <!-- Navbar for mobile toggle -->
+            <nav
+                class="lg:hidden fixed top-0 left-0 w-full h-16 bg-white shadow z-40 flex items-center justify-between px-4">
+                <div class="flex items-center">
+                    <button id="adminMobileMenuBtn" class="p-2 rounded-md hover:bg-gray-100 transition-colors">
+                        <svg class="size-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <span class="ml-4 text-xl font-bold text-gray-800">Admin Panel</span>
+                </div>
+                <a href="https://notesgenerator.netlify.app/" target="_blank"
+                    class="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-colors text-sm">
+                    <i class="fas fa-sticky-note mr-1"></i>Generate Notes
+                </a>
+            </nav>
+
+            <!-- Top Navbar (Desktop) -->
+            <nav class="hidden lg:block bg-white shadow-sm">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16">
+                        <div class="flex items-center">
+                            <h1 class="text-xl font-semibold text-gray-800">Admin Panel</h1>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <a href="https://notesgenerator.netlify.app/" target="_blank"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-sticky-note mr-2"></i>Generate Notes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="p-8 pt-16 lg:pt-8">
                 <%- body %>
             </main>
         </div>

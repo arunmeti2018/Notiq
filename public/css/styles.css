@@ -38,6 +38,7 @@ html {
 
 /* Print styles */
 @media print {
+
   .sidebar-desktop,
   .mobile-menu-btn {
     display: none;

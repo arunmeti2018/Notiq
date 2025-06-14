@@ -74,57 +74,93 @@
     <h2 class="text-xl font-semibold text-gray-800 mb-4">Recent Pages</h2>
     <% if (recentPages.length> 0) { %>
         <div class="overflow-x-auto">
-            <table class="min-w-full">
+            <table class="min-w-full hidden md:table">
                 <thead>
                     <tr class="border-b">
-                        <th class="text-left py-2">Title</th>
-                        <th class="text-left py-2">Author</th>
-                        <th class="text-left py-2">Status</th>
-                        <th class="text-left py-2">Updated</th>
-                        <th class="text-left py-2">Actions</th>
+                        <th class="text-left py-2 sm:py-1 sm:text-xs">Title</th>
+                        <th class="text-left py-2 sm:py-1 sm:text-xs">Author</th>
+                        <th class="text-left py-2 sm:py-1 sm:text-xs">Status</th>
+                        <th class="text-left py-2 sm:py-1 sm:text-xs">Updated</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% recentPages.forEach(page=> { %>
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="py-2">
+                            <td class="py-2 sm:py-1 sm:text-xs">
                                 <div>
                                     <div class="font-medium text-gray-800">
                                         <%= page.title %>
                                     </div>
-                                    <div class="text-sm text-gray-500">
+                                    <div class="text-sm text-gray-500 sm:text-xs">
                                         <%= page.category %>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-2 text-gray-600">
+                            <td class="py-2 text-gray-600 sm:py-1 sm:text-xs">
                                 <%= page.author.username %>
                             </td>
-                            <td class="py-2">
+                            <td class="py-2 sm:py-1 sm:text-xs">
                                 <span
                                     class="px-2 py-1 text-xs rounded-full <%= page.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
                                     <%= page.isPublished ? 'Published' : 'Draft' %>
                                 </span>
                             </td>
-                            <td class="py-2 text-gray-600">
+                            <td class="py-2 text-gray-600 sm:py-1 sm:text-xs">
                                 <%= new Date(page.updatedAt).toLocaleDateString() %>
-                            </td>
-                            <td class="py-2">
-                                <div class="flex space-x-2">
-                                    <a href="/admin/pages/<%= page._id %>/edit"
-                                        class="text-blue-600 hover:text-blue-800 text-sm">
-                                        <i class="fas fa-edit mr-1"></i> Edit
-                                    </a>
-                                    <a href="/admin/pages/<%= page._id %>/preview"
-                                        class="text-green-600 hover:text-green-800 text-sm">
-                                        <i class="fas fa-eye mr-1"></i> Preview
-                                    </a>
-                                </div>
                             </td>
                         </tr>
                         <% }); %>
                 </tbody>
             </table>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden space-y-4">
+                <% recentPages.forEach(page=> { %>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-medium text-gray-800">
+                                    <%= page.title %>
+                                </h3>
+                                <p class="text-sm text-gray-500">
+                                    <%= page.category %>
+                                </p>
+                            </div>
+                            <span
+                                class="px-2 py-1 text-xs rounded-full <%= page.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                <%= page.isPublished ? 'Published' : 'Draft' %>
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">
+                            <p>Author: <%= page.author.username %>
+                            </p>
+                            <p>Updated: <%= new Date(page.updatedAt).toLocaleDateString() %>
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <a href="/admin/pages/<%= page._id %>/edit"
+                                class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+                            <a href="/admin/pages/<%= page._id %>/preview"
+                                class="text-green-600 hover:text-green-800 text-sm">
+                                <i class="fas fa-eye mr-1"></i> Preview
+                            </a>
+                            <a href="/<%= page.slug %>" target="_blank"
+                                class="text-purple-600 hover:text-purple-800 text-sm">
+                                <i class="fas fa-external-link-alt mr-1"></i> View
+                            </a>
+                            <form action="/admin/pages/<%= page._id %>/delete" method="POST" class="inline-block">
+                                <button type="submit"
+                                    onclick="return confirm('Are you sure you want to delete this page?')"
+                                    class="text-red-600 hover:text-red-800 text-sm inline-flex items-center">
+                                    <i class="fas fa-trash-alt mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <% }); %>
+            </div>
         </div>
         <% } else { %>
             <p class="text-gray-500">No pages created yet. <a href="/admin/pages/new"
