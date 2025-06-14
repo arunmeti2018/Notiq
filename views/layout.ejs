@@ -80,13 +80,24 @@
                     <div class="text-sm font-medium text-muted-foreground mb-2">Navigation</div>
                     <% const navItems=[ { name: "Introduction" , href: "/" }, { name: "Getting Started" ,
                         href: "/getting-started" }, { name: "Components" , href: "/components" }, {
-                        name: "API Reference" , href: "/api-reference" }, ]; %>
+                        name: "API Reference" , href: "/api-reference" } ]; %>
+
                         <% navItems.forEach(item=> { %>
                             <a href="<%= item.href %>"
                                 class="flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-secondary-foreground <%= (typeof currentPath !== 'undefined' && currentPath === item.href) ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground' %>">
                                 <%= item.name %>
                             </a>
                             <% }); %>
+
+                                <% if (typeof sidebarPages !=='undefined' && sidebarPages.length> 0) { %>
+                                    <div class="text-sm font-medium text-muted-foreground mt-4 mb-2">Pages</div>
+                                    <% sidebarPages.forEach(page=> { %>
+                                        <a href="/<%= page.slug %>"
+                                            class="flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-secondary-foreground <%= (typeof currentPath !== 'undefined' && currentPath === '/' + page.slug) ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground' %>">
+                                            <%= page.title %>
+                                        </a>
+                                        <% }); %>
+                                            <% } %>
                 </nav>
             </div>
         </div>

@@ -49,6 +49,20 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+// Add middleware to fetch pages for sidebar
+app.use(async (req, res, next) => {
+  try {
+    const pages = await Page.find({ isPublished: true })
+      .select('title slug category order')
+      .sort({ category: 1, order: 1 })
+    res.locals.sidebarPages = pages
+  } catch (error) {
+    console.error('Error fetching sidebar pages:', error)
+    res.locals.sidebarPages = []
+  }
+  next()
+})
+
 // Session middleware
 const session = require("express-session")
 const MongoStore = require("connect-mongo")
