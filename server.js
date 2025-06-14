@@ -15,7 +15,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Connect to MongoDB with better error handling
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/docs-site", {
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/Notiq", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -34,9 +34,15 @@ app.set("views", path.join(__dirname, "views"))
 // Configure express-ejs-layouts
 const expressLayouts = require('express-ejs-layouts')
 app.use(expressLayouts)
-// app.set('layout', 'layout') // Removed global default layout
+app.set('layout', 'layout') // Set default layout
 app.set("layout extractScripts", true)
 app.set("layout extractStyles", true)
+
+// Middleware to set admin layout for admin routes
+app.use('/admin', (req, res, next) => {
+  res.locals.layout = 'admin/layout'
+  next()
+})
 
 // Middleware
 app.use(express.static(path.join(__dirname, "public")))
@@ -53,7 +59,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost:27017/docs-site",
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost:27017/Notiq",
     }),
     cookie: {
       secure: process.env.NODE_ENV === "production",
@@ -92,7 +98,7 @@ app.get("/:slug", async (req, res, next) => {
     }
 
     res.render("page", {
-      title: page.seoTitle || `${page.title} | Minimal Docs Site`,
+      title: page.seoTitle || `${page.title} | Notiq`,
       description: page.seoDescription || page.description,
       currentPath: `/${page.slug}`,
       page,

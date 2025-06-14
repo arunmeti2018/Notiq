@@ -123,14 +123,16 @@ router.get("/dashboard", isAuthorized(["admin", "editor"]), async (req, res) => 
         draftPages,
       },
       recentPages,
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/dashboard'
     })
   } catch (error) {
     console.error("Dashboard error:", error)
     res.render("admin/error", {
       title: "Error",
       error: "Failed to load dashboard",
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/dashboard'
     })
   }
 })
@@ -169,14 +171,16 @@ router.get("/pages", isAuthorized(["admin", "editor"]), async (req, res) => {
       nextPage: page + 1,
       prevPage: page - 1,
       query: req.query,
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/pages'
     })
   } catch (error) {
     console.error("Pages list error:", error)
     res.render("admin/error", {
       title: "Error",
       error: "Failed to load pages",
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/pages'
     })
   }
 })
@@ -192,14 +196,16 @@ router.get("/pages/new", isAuthorized(["admin", "editor"]), async (req, res) => 
       page: null,
       isEdit: false,
       templates,
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/pages/new'
     })
   } catch (error) {
     console.error("New page form error:", error)
     res.render("admin/error", {
       title: "Error",
       error: "Failed to load page form",
-      layout: 'admin/layout'
+      layout: 'admin/layout',
+      currentPath: '/admin/pages/new'
     })
   }
 })
