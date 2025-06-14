@@ -1,132 +1,56 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const path = require("path")
-const fs = require("fs")
-require("dotenv").config()
+const express = require("express");
+const cors = require("cors");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+require("dotenv").config();
 
-const app = express()
-const PORT = process.env.PORT || 3000
-
-// Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, "public/uploads")
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true })
-}
-
-// Connect to MongoDB with better error handling
-mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/Notiq", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB")
-  })
-  .catch((error) => {
-    console.error("MongoDB connection error:", error)
-    process.exit(1)
-  })
-
-// Set EJS as templating engine
-app.set("view engine", "ejs")
-app.set("views", path.join(__dirname, "views"))
-
-// Configure express-ejs-layouts
-const expressLayouts = require('express-ejs-layouts')
-app.use(expressLayouts)
-app.set('layout', 'layout') // Set default layout
-app.set("layout extractScripts", true)
-app.set("layout extractStyles", true)
-
-// Middleware to set admin layout for admin routes
-app.use('/admin', (req, res, next) => {
-  res.locals.layout = 'admin/layout'
-  next()
-})
+const app = express();
+const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.static(path.join(__dirname, "public")))
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
 
-// Session middleware
-const session = require("express-session")
-const MongoStore = require("connect-mongo")
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "your-secret-key-change-this-in-production",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost:27017/Notiq",
-    }),
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-  }),
-)
-
-// Routes
-const indexRouter = require("./routes/index")
-const gettingStartedRouter = require("./routes/getting-started")
-const componentsRouter = require("./routes/components")
-const apiReferenceRouter = require("./routes/api-reference")
-const adminRouter = require("./routes/admin")
-
-app.use("/", indexRouter)
-app.use("/getting-started", gettingStartedRouter)
-app.use("/components", componentsRouter)
-app.use("/api-reference", apiReferenceRouter)
-app.use("/admin", adminRouter)
-
-// Import the Page model
-const Page = require("./models/Page")
-
-// Dynamic page routes (add this before the 404 handler)
-app.get("/:slug", async (req, res, next) => {
+app.post("/api/generate-notes", async (req, res) => {
   try {
-    const page = await Page.findOne({
-      slug: req.params.slug,
-      isPublished: true,
-    }).populate("author", "username")
+    const { subject, topics, studyType } = req.body;
 
-    if (!page) {
-      return next() // Continue to 404 handler
+    if (!subject || !topics || !studyType) {
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
-    res.render("page", {
-      title: page.seoTitle || `${page.title} | Notiq`,
-      description: page.seoDescription || page.description,
-      currentPath: `/${page.slug}`,
-      page,
-    })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    let prompt = `Create comprehensive study notes for ${subject} focusing on the following topics: ${topics}. `;
+
+    switch (studyType) {
+      case "revision":
+        prompt += `Format as a quick revision guide with key concepts, important points, and common interview questions for each topic.`;
+        break;
+      case "detailed-explanation":
+        prompt += `Provide detailed explanations with examples, code snippets, and real-world applications for each topic.`;
+        break;
+      case "in-depth-analysis":
+        prompt += `Create an in-depth analysis including advanced concepts, complexity analysis, interview preparation tips, and best practices for each topic.`;
+        break;
+    }
+
+    prompt += ` Format the response in markdown with clear headings and bullet points.`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const notes = response.text();
+
+    res.json({ notes });
   } catch (error) {
-    console.error("Dynamic page error:", error)
-    next()
+    console.error("Error generating notes:", error);
+    res.status(500).json({ error: "Failed to generate notes" });
   }
-})
+});
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).render("404", {
-    title: "404 - Page Not Found",
-    currentPath: req.path,
-  })
-})
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).render("error", {
-    title: "Error",
-    error: process.env.NODE_ENV === "production" ? "Something went wrong" : err.message,
-  })
-})
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
-  console.log(`Admin panel available at http://localhost:${PORT}/admin`)
-})
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
