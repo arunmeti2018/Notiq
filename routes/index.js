@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 
     if (customHomePage) {
       return res.render("page", {
-        title: customHomePage.seoTitle || `${customHomePage.title} | Minimal Docs Site`,
+        title: customHomePage.seoTitle || `${customHomePage.title} | Notiq`,
         description: customHomePage.seoDescription || customHomePage.description,
         currentPath: "/",
         page: customHomePage,
@@ -21,13 +21,13 @@ router.get("/", async (req, res) => {
 
     // Fallback to default home page
     res.render("index", {
-      title: "Introduction | Minimal Docs Site",
+      title: "Introduction | Notiq",
       currentPath: "/",
     })
   } catch (error) {
     console.error("Home page error:", error)
     res.render("index", {
-      title: "Introduction | Minimal Docs Site",
+      title: "Introduction | Notiq",
       currentPath: "/",
     })
   }
