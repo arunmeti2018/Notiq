@@ -7,21 +7,23 @@ async function createAdminUser() {
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/Notiq")
 
+
+    // Create admin user
+    const adminUser = new User({
+      username: "arun",
+      email: "arun@gmail.com",
+      password: "arun123", // Change this password!
+      role: "admin",
+    })
+
     // Check if admin already exists
-    const existingAdmin = await User.findOne({ role: "admin" })
+    const existingAdmin = await User.findOne({ username: "arun" })
     if (existingAdmin) {
       console.log("Admin user already exists:", existingAdmin.username)
       return
     }
 
-    // Create admin user
-    const adminUser = new User({
-      username: "admin",
-      email: "admin@example.com",
-      password: "admin123", // Change this password!
-      role: "admin",
-    })
-
+    
     await adminUser.save()
     console.log("Admin user created successfully!")
     console.log("Username: admin")

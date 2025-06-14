@@ -434,6 +434,7 @@ router.get("/pages/:id/preview", isAuthorized(["admin", "editor"]), async (req, 
       return res.status(404).render("admin/error", {
         title: "Page Not Found",
         error: "Page not found",
+        user: req.user,
         layout: 'admin/layout'
       })
     }
@@ -442,6 +443,7 @@ router.get("/pages/:id/preview", isAuthorized(["admin", "editor"]), async (req, 
       title: `Preview: ${page.title}`,
       user: req.user,
       page,
+      currentPath: '/admin/pages',
       layout: 'admin/layout'
     })
   } catch (error) {
@@ -449,6 +451,7 @@ router.get("/pages/:id/preview", isAuthorized(["admin", "editor"]), async (req, 
     res.render("admin/error", {
       title: "Error",
       error: "Failed to load preview",
+      user: req.user,
       layout: 'admin/layout'
     })
   }
