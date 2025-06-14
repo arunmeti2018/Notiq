@@ -1,0 +1,45 @@
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-4xl font-bold mb-6">Getting Started</h1>
+    <p class="text-xl mb-4 text-muted-foreground">
+        Welcome to the getting started guide for our documentation site. Follow these steps to set up your environment
+        and begin using our tools.
+    </p>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4">Installation</h2>
+    <p class="mb-4">To install our package, run the following command in your terminal:</p>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">npm install @our-company/package</code>
+    </pre>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4">Configuration</h2>
+    <p class="mb-4">
+        After installation, you need to set up the configuration file. Create a file named <code
+            class="bg-muted px-2 py-1 rounded text-sm">config.js</code> in
+        your project root and add the following content:
+    </p>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">module.exports = {
+  apiKey: 'YOUR_API_KEY',
+  environment: 'production'
+}</code>
+    </pre>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4">Usage</h2>
+    <p class="mb-4">Here's a basic example of how to use our package in your project:</p>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">const { Client } = require('@our-company/package');
+
+const client = new Client();
+const result = await client.doSomething();
+console.log(result);</code>
+    </pre>
+
+    <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 class="font-semibold mb-2 text-blue-900">💡 Pro Tip</h3>
+        <p class="text-sm text-blue-800">
+            For more detailed information, please check out our <a href="/components"
+                class="text-blue-600 hover:underline">Components</a> and <a href="/api-reference"
+                class="text-blue-600 hover:underline">API Reference</a> sections.
+        </p>
+    </div>
+</div>

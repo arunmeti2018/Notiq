@@ -1,0 +1,45 @@
+<h1 class="text-4xl font-bold mb-6">Components</h1>
+<p class="text-xl mb-4 text-muted-foreground">
+    Our library provides a set of reusable components to help you build your application faster. Here's an
+    overview of some key components:
+</p>
+
+<h2 class="text-2xl font-semibold mt-8 mb-4">Button</h2>
+<p class="mb-4">
+    The Button component is a versatile and customizable button that can be used for various actions in your
+    application.
+</p>
+<pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+    <code class="text-sm">const { Button } = require('@our-company/package');
+
+&lt;Button variant="primary" onClick={() => console.log('Clicked!')}&gt;
+  Click me
+&lt;/Button&gt;</code>
+</pre>
+
+<h2 class="text-2xl font-semibold mt-8 mb-4">Card</h2>
+<p class="mb-4">The Card component is used to display content in a box with a consistent style.</p>
+<pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+    <code class="text-sm">const { Card, CardHeader, CardContent } = require('@our-company/package');
+
+&lt;Card&gt;
+  &lt;CardHeader&gt;Card Title&lt;/CardHeader&gt;
+  &lt;CardContent&gt;This is the card content.&lt;/CardContent&gt;
+&lt;/Card&gt;</code>
+</pre>
+
+<h2 class="text-2xl font-semibold mt-8 mb-4">Input</h2>
+<p class="mb-4">The Input component is a styled input field for collecting user data.</p>
+<pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+    <code class="text-sm">const { Input } = require('@our-company/package');
+
+&lt;Input placeholder="Enter your name" onChange={(e) => console.log(e.target.value)} /&gt;</code>
+</pre>
+
+<div class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+    <h3 class="font-semibold mb-2 text-green-900">📚 More Information</h3>
+    <p class="text-sm text-green-800">
+        For a complete list of components and their props, please refer to our <a href="/api-reference"
+            class="text-green-600 hover:underline">API Reference</a> section.
+    </p>
+</div>

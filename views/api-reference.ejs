@@ -1,0 +1,62 @@
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-4xl font-bold mb-6">API Reference</h1>
+    <p class="text-xl mb-4 text-muted-foreground">
+        This section provides a detailed reference for the API of our library. You'll find information about
+        available methods, their parameters, and return values.
+    </p>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4">Client</h2>
+    <p class="mb-4">The main class for interacting with our API.</p>
+
+    <h3 class="text-xl font-semibold mt-6 mb-2">Constructor</h3>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">new Client(config: ClientConfig)</code>
+    </pre>
+    <p class="mb-4">Creates a new instance of the Client class.</p>
+
+    <h4 class="text-lg font-semibold mt-4 mb-2">Parameters</h4>
+    <ul class="list-disc list-inside mb-4">
+        <li>
+            <code class="bg-muted px-2 py-1 rounded text-sm">config</code>: An object containing the client
+            configuration
+        </li>
+    </ul>
+
+    <h3 class="text-xl font-semibold mt-6 mb-2">Methods</h3>
+
+    <h4 class="text-lg font-semibold mt-4 mb-2">doSomething()</h4>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">async doSomething(): Promise&lt;Result&gt;</code>
+    </pre>
+    <p class="mb-4">Performs an action and returns a result.</p>
+
+    <h4 class="text-lg font-semibold mt-4 mb-2">Returns</h4>
+    <p class="mb-4">A Promise that resolves to a Result object.</p>
+
+    <h2 class="text-2xl font-semibold mt-8 mb-4">Types</h2>
+
+    <h3 class="text-xl font-semibold mt-6 mb-2">ClientConfig</h3>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">interface ClientConfig {
+  apiKey: string;
+  environment: 'production' | 'development';
+}</code>
+    </pre>
+
+    <h3 class="text-xl font-semibold mt-6 mb-2">Result</h3>
+    <pre class="bg-muted p-4 rounded-md mb-4 overflow-x-auto">
+        <code class="text-sm">interface Result {
+  id: string;
+  data: any;
+  timestamp: number;
+}</code>
+    </pre>
+
+    <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 class="font-semibold mb-2 text-yellow-900">🔗 Related</h3>
+        <p class="text-sm text-yellow-800">
+            For more detailed information about specific components and their props, please refer to the <a
+                href="/components" class="text-yellow-600 hover:underline">Components</a> section.
+        </p>
+    </div>
+</div>

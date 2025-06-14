@@ -1,0 +1,66 @@
+<% if (page.featuredImage) { %>
+    <div class="mb-8">
+        <img src="<%= page.featuredImage %>" alt="<%= page.title %>" class="w-full h-64 object-cover rounded-lg">
+    </div>
+    <% } %>
+
+        <div class="mb-6">
+            <h1 class="text-4xl font-bold mb-4">
+                <%= page.title %>
+            </h1>
+            <% if (page.description) { %>
+                <p class="text-xl text-muted-foreground mb-4">
+                    <%= page.description %>
+                </p>
+                <% } %>
+
+                    <div class="flex items-center text-sm text-muted-foreground space-x-4">
+                        <span>By <%= page.author.username %></span>
+                        <span>•</span>
+                        <span>
+                            <%= new Date(page.updatedAt).toLocaleDateString() %>
+                        </span>
+                        <span>•</span>
+                        <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs">
+                            <%= page.category %>
+                        </span>
+                    </div>
+        </div>
+
+        <div class="prose max-w-none">
+            <%- page.content %>
+        </div>
+
+        <% if (page.tags && page.tags.length> 0) { %>
+            <div class="mt-8 pt-6 border-t">
+                <h3 class="text-sm font-medium mb-3">Tags</h3>
+                <div class="flex flex-wrap gap-2">
+                    <% page.tags.forEach(tag=> { %>
+                        <span class="px-3 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-full">
+                            <%= tag %>
+                        </span>
+                        <% }); %>
+                </div>
+            </div>
+            <% } %>
+
+                <script>
+                    // Copy code functionality for dynamic pages
+                    function copyCode(button) {
+                        const codeBlock = button.closest('.code-block-wrapper').querySelector('code');
+                        const text = codeBlock.textContent;
+
+                        navigator.clipboard.writeText(text).then(function () {
+                            const originalText = button.textContent;
+                            button.textContent = 'Copied!';
+                            button.classList.add('bg-green-100', 'text-green-700');
+
+                            setTimeout(function () {
+                                button.textContent = originalText;
+                                button.classList.remove('bg-green-100', 'text-green-700');
+                            }, 2000);
+                        }).catch(function (err) {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    }
+                </script>

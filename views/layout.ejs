@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(214.3 31.8% 91.4%)",
+                        input: "hsl(214.3 31.8% 91.4%)",
+                        ring: "hsl(222.2 84% 4.9%)",
+                        background: "hsl(0 0% 100%)",
+                        foreground: "hsl(222.2 84% 4.9%)",
+                        primary: {
+                            DEFAULT: "hsl(222.2 47.4% 11.2%)",
+                            foreground: "hsl(210 40% 98%)",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(210 40% 96%)",
+                            foreground: "hsl(222.2 84% 4.9%)",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(210 40% 96%)",
+                            foreground: "hsl(215.4 16.3% 46.9%)",
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="antialiased bg-background text-foreground">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 z-50 flex w-72 flex-col border-r border-border bg-background">
+            <!-- Header -->
+            <div class="border-b border-border px-6 py-4 flex items-center justify-between">
+                <a href="/" class="flex items-center space-x-2">
+                    <div
+                        class="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col gap-0.5 leading-none">
+                        <span class="font-semibold">Docs</span>
+                        <span class="text-sm text-muted-foreground">v1.0.0</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Search -->
+            <div class="px-4 py-2">
+                <div class="relative">
+                    <input type="text" placeholder="Search the docs..."
+                        class="w-full pl-8 pr-4 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                        id="searchInput">
+                    <svg class="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-1 overflow-auto py-4">
+                <nav class="space-y-1 px-4">
+                    <div class="text-sm font-medium text-muted-foreground mb-2">Navigation</div>
+                    <% const navItems=[ { name: "Introduction" , href: "/" }, { name: "Getting Started" ,
+                        href: "/getting-started" }, { name: "Components" , href: "/components" }, {
+                        name: "API Reference" , href: "/api-reference" }, ]; %>
+                        <% navItems.forEach(item=> { %>
+                            <a href="<%= item.href %>"
+                                class="flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-secondary-foreground <%= (typeof currentPath !== 'undefined' && currentPath === item.href) ? 'bg-secondary text-secondary-foreground' : 'text-muted-foreground' %>">
+                                <%= item.name %>
+                            </a>
+                            <% }); %>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-72">
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn"
+                class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-background border border-border">
+                <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+
+            <main class="p-8 pt-16 max-w-4xl">
+                <%- body %>
+            </main>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

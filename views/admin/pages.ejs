@@ -1,0 +1,214 @@
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Manage Pages</h1>
+        <p class="text-gray-600 mt-2">Create, edit, and organize your documentation</p>
+    </div>
+    <a href="/admin/pages/new" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+        Create New Page
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="bg-white p-4 rounded-lg shadow mb-6">
+    <div class="flex flex-wrap gap-4 items-center">
+        <div>
+            <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select id="statusFilter"
+                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">All</option>
+                <option value="published" <%=query.status==='published' ? 'selected' : '' %>>Published</option>
+                <option value="draft" <%=query.status==='draft' ? 'selected' : '' %>>Draft</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="categoryFilter" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select id="categoryFilter"
+                class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">All Categories</option>
+                <% categories.forEach(category=> { %>
+                    <option value="<%= category %>" <%=query.category===category ? 'selected' : '' %>><%= category %>
+                    </option>
+                    <% }); %>
+            </select>
+        </div>
+
+        <div class="flex-1">
+            <label for="searchPages" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <input type="text" id="searchPages" placeholder="Search pages..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+    </div>
+</div>
+
+<!-- Pages Table -->
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    <% if (pages.length> 0) { %>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Category</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Author</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Updated</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <% pages.forEach(page=> { %>
+                        <tr class="hover:bg-gray-50" data-searchable>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900" data-searchable>
+                                        <%= page.title %>
+                                    </div>
+                                    <div class="text-sm text-gray-500">/<%= page.slug %>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                                    <%= page.category %>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <%= page.author.username %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 py-1 text-xs font-medium rounded-full <%= page.isPublished ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                    <%= page.isPublished ? 'Published' : 'Draft' %>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <%= new Date(page.updatedAt).toLocaleDateString() %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    <a href="/admin/pages/<%= page._id %>/edit"
+                                        class="text-blue-600 hover:text-blue-900">Edit</a>
+                                    <a href="/admin/pages/<%= page._id %>/preview" target="_blank"
+                                        class="text-green-600 hover:text-green-900">Preview</a>
+                                    <% if (page.isPublished) { %>
+                                        <a href="/<%= page.slug %>" target="_blank"
+                                            class="text-purple-600 hover:text-purple-900">View</a>
+                                        <% } %>
+                                            <button data-delete="/admin/pages/<%= page._id %>"
+                                                data-item-name="<%= page.title %>"
+                                                class="text-red-600 hover:text-red-900">
+                                                Delete
+                                            </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <% if (totalPages> 1) { %>
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <% if (hasPrevPage) { %>
+                        <a href="?page=<%= prevPage %>"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
+                        <% } %>
+                            <% if (hasNextPage) { %>
+                                <a href="?page=<%= nextPage %>"
+                                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
+                                <% } %>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Showing page <span class="font-medium">
+                                <%= currentPage %>
+                            </span> of <span class="font-medium">
+                                <%= totalPages %>
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            <% if (hasPrevPage) { %>
+                                <a href="?page=<%= prevPage %>"
+                                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Previous</a>
+                                <% } %>
+
+                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                        <% if (i===currentPage) { %>
+                                            <span
+                                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600">
+                                                <%= i %>
+                                            </span>
+                                            <% } else if (i===1 || i===totalPages || (i>= currentPage - 2 && i <=
+                                                    currentPage + 2)) { %>
+                                                    <a href="?page=<%= i %>"
+                                                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                                        <%= i %>
+                                                    </a>
+                                                    <% } else if (i===currentPage - 3 || i===currentPage + 3) { %>
+                                                        <span
+                                                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                                                        <% } %>
+                                                            <% } %>
+
+                                                                <% if (hasNextPage) { %>
+                                                                    <a href="?page=<%= nextPage %>"
+                                                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Next</a>
+                                                                    <% } %>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+                <% } else { %>
+                    <div class="text-center py-12">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No pages</h3>
+                        <p class="mt-1 text-sm text-gray-500">Get started by creating your first documentation page.</p>
+                        <div class="mt-6">
+                            <a href="/admin/pages/new"
+                                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                Create New Page
+                            </a>
+                        </div>
+                    </div>
+                    <% } %>
+</div>
+
+<script>
+    // Filter functionality
+    document.getElementById('statusFilter').addEventListener('change', function () {
+        updateFilters();
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', function () {
+        updateFilters();
+    });
+
+    function updateFilters() {
+        const status = document.getElementById('statusFilter').value;
+        const category = document.getElementById('categoryFilter').value;
+
+        const params = new URLSearchParams();
+        if (status) params.set('status', status);
+        if (category) params.set('category', category);
+
+        window.location.search = params.toString();
+    }
+</script>
