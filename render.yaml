@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: notiqq
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        value: https://notiqq.onrender.com
+    staticPublishPath: ./public
+    routes:
+      - type: rewrite
+        source: /uploads/(.*)
+        destination: /public/uploads/$1 

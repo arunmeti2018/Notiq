@@ -273,7 +273,9 @@ router.post("/pages", isAuthorized(["admin", "editor"]), upload.single("featured
     }
 
     if (req.file) {
-      pageData.featuredImage = `/uploads/${req.file.filename}`
+      // Store the full URL in production, relative path in development
+      const baseUrl = process.env.NODE_ENV === 'production' ? process.env.BASE_URL || 'https://notiqq.onrender.com' : '';
+      pageData.featuredImage = `${baseUrl}/uploads/${req.file.filename}`;
     }
 
     const page = new Page(pageData)
@@ -303,7 +305,8 @@ router.post('/upload-image', isAuthenticated, upload.single('image'), (req, res)
     }
 
     // Return the URL of the uploaded image
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const baseUrl = process.env.NODE_ENV === 'production' ? process.env.BASE_URL || 'https://notiqq.onrender.com' : '';
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
     res.json({ url: imageUrl });
   } catch (error) {
     console.error('Image upload error:', error);
@@ -390,7 +393,8 @@ router.post("/pages/:id", isAuthorized(["admin", "editor"]), upload.single("feat
     page.seoDescription = seoDescription
 
     if (req.file) {
-      page.featuredImage = `/uploads/${req.file.filename}`
+      const baseUrl = process.env.NODE_ENV === 'production' ? process.env.BASE_URL || 'https://notiqq.onrender.com' : '';
+      page.featuredImage = `${baseUrl}/uploads/${req.file.filename}`;
     }
 
     await page.save()
