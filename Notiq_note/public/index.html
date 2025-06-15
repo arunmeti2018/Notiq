@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notiq</title>
+    <title>Notiq Notes Generation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <!-- Add Configuration -->
-    <!-- <script src="config.js"></script> -->
+    <script src="config.js"></script>
     <style>
         .tab-content {
             display: none;
@@ -289,19 +289,22 @@
                 <i data-lucide="moon" class="h-6 w-6"></i>
             </button>
             <div class="hero-gradient rounded-2xl p-8 mb-8 text-white shadow-lg">
-                <h1 class="text-5xl font-bold mb-4 animate-fade-in">Notiq</h1>
+                <h1 class="text-5xl font-bold mb-4 animate-fade-in">Notiq Notes Generation</h1>
                 <p class="text-xl text-white/90 max-w-2xl mx-auto">
-                    Generate personalized study notes with AI, track your progress, and ace your placement interviews.
+                    Generate personalized study notes with Notiq, track your progress, and ace your placement
+                    interviews.
                 </p>
                 <div class="mt-6 flex justify-center gap-4">
-                    <a href="https://notiq.onrender.com/admin"
-                        class="px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors">
+                    <button
+                        class="px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                        onclick="window.location.href='https://notiq.onrender.com/admin'">
                         Get Started
-                    </a>
-                    <a href="https://notiq.onrender.com"
-                        class="px-6 py-3 border border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+                    </button>
+                    <button
+                        class="px-6 py-3 border border-white text-white rounded-lg font-medium hover:bg-white/10 transition-colors"
+                        onclick="window.location.href='https://notiq.onrender.com'">
                         Learn More
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -381,19 +384,20 @@
             </div>
 
             <!-- Study Session Tab -->
-            <div id="study-tab" class="tab-content active p-4 sm:p-6">
-                <div class="grid lg:grid-cols-2 gap-4 sm:gap-8">
+            <div id="study-tab" class="tab-content active p-2 sm:p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                     <!-- Enhanced Input Form -->
                     <div
-                        class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg p-4 sm:p-8 scale-in">
-                        <div class="flex items-center gap-3 mb-4 sm:mb-6">
+                        class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg p-3 sm:p-8 scale-in">
+                        <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-6">
                             <div class="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                                <i data-lucide="lightbulb" class="h-6 w-6 text-blue-600 dark:text-blue-400"></i>
+                                <i data-lucide="lightbulb"
+                                    class="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400"></i>
                             </div>
-                            <h2 class="text-xl sm:text-2xl font-bold dark:text-white">Create Study Plan</h2>
+                            <h2 class="text-lg sm:text-2xl font-bold dark:text-white">Create Study Plan</h2>
                         </div>
-                        <p class="text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base">Generate
-                            AI-powered study notes tailored to your needs</p>
+                        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-8">Generate
+                            Notiq-powered study notes tailored to your needs</p>
 
                         <form id="study-form" class="space-y-4 sm:space-y-6">
                             <div>
@@ -413,11 +417,10 @@
                                 <label for="topics"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
                                 <div class="relative">
-                                    <div class="absolute top-2 sm:top-3 left-3 pointer-events-none">
+                                    <div class="absolute top-3 left-3 pointer-events-none">
                                         <i data-lucide="list" class="h-5 w-5 text-gray-400"></i>
                                     </div>
-                                    <textarea id="topics" rows="3"
-                                        placeholder="Enter topics separated by commas&#10;e.g., Binary Trees, Graph Traversal, Dynamic Programming"
+                                    <textarea id="topics" rows="3" placeholder="Enter topics separated by commas"
                                         class="w-full pl-10 pr-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white input-focus"></textarea>
                                 </div>
                             </div>
@@ -443,11 +446,11 @@
                                 </div>
                             </div>
 
-                            <a href="https://notes-generator-4qos.onrender.com" id="generate-btn"
+                            <button type="submit" id="generate-btn"
                                 class="w-full bg-blue-600 text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
                                 <i data-lucide="sparkles" class="h-5 w-5"></i>
-                                Generate Notes
-                            </a>
+                                Generate Notiq Notes
+                            </button>
                         </form>
 
                         <!-- Enhanced Timer Controls -->
@@ -462,13 +465,13 @@
                             </div>
                             <div class="flex gap-2 sm:gap-3">
                                 <button id="timer-toggle"
-                                    class="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white transition-colors"
+                                    class="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white transition-colors"
                                     onclick="toggleTimer()">
                                     <i data-lucide="play" class="h-4 w-4 mr-2" id="timer-icon"></i>
                                     <span id="timer-text">Start</span>
                                 </button>
                                 <button
-                                    class="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white transition-colors"
+                                    class="flex-1 flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white transition-colors"
                                     onclick="resetTimer()">
                                     <i data-lucide="rotate-ccw" class="h-4 w-4 mr-2"></i>
                                     Reset
@@ -478,55 +481,49 @@
                     </div>
 
                     <!-- Enhanced Generated Notes -->
-                    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg p-4 sm:p-8 scale-in"
+                    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-lg p-3 sm:p-8 scale-in"
                         style="animation-delay: 0.1s">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                            <div class="flex items-center gap-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+                            <div class="flex items-center gap-2 sm:gap-3">
                                 <div class="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                                    <i data-lucide="file-text" class="h-6 w-6 text-purple-600 dark:text-purple-400"></i>
+                                    <i data-lucide="file-text"
+                                        class="h-5 w-5 sm:h-6 sm:w-6 text-purple-600 dark:text-purple-400"></i>
                                 </div>
-                                <h2 class="text-xl sm:text-2xl font-bold dark:text-white">Generated Notes</h2>
+                                <h2 class="text-lg sm:text-2xl font-bold dark:text-white">Generated Notes</h2>
                             </div>
-                            <div class="flex flex-wrap gap-2 sm:gap-3">
+                            <div class="flex gap-2 sm:gap-3">
                                 <button id="save-btn"
-                                    class="flex items-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white disabled:opacity-50 transition-colors"
+                                    class="flex items-center px-2 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white disabled:opacity-50 transition-colors"
                                     onclick="saveStudySession()" disabled>
-                                    <i data-lucide="save" class="h-4 w-4 mr-2"></i>
+                                    <i data-lucide="save" class="h-4 w-4 mr-1 sm:mr-2"></i>
                                     Save
                                 </button>
                                 <button id="export-btn"
-                                    class="flex items-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white disabled:opacity-50 transition-colors"
+                                    class="flex items-center px-2 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white disabled:opacity-50 transition-colors"
                                     onclick="exportNotes()" disabled>
-                                    <i data-lucide="download" class="h-4 w-4 mr-2"></i>
+                                    <i data-lucide="download" class="h-4 w-4 mr-1 sm:mr-2"></i>
                                     Export
-                                </button>
-                                <button id="share-btn"
-                                    class="flex items-center px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-white disabled:opacity-50 transition-colors"
-                                    onclick="shareNotes()" disabled>
-                                    <i data-lucide="share-2" class="h-4 w-4 mr-2"></i>
-                                    Share
                                 </button>
                             </div>
                         </div>
 
                         <div id="notes-container" class="notes-container">
-                            <div id="loading-state" class="hidden flex items-center justify-center h-48 sm:h-64">
+                            <div id="loading-state" class="hidden flex items-center justify-center h-64">
                                 <div class="text-center">
                                     <div class="spinner mx-auto mb-4"></div>
-                                    <p class="dark:text-white text-sm sm:text-base">Generating your personalized study
-                                        notes...</p>
+                                    <p class="dark:text-white">Generating your personalized study notes...</p>
                                 </div>
                             </div>
                             <div id="empty-state"
-                                class="text-center text-gray-500 dark:text-gray-400 h-48 sm:h-64 flex items-center justify-center">
+                                class="text-center text-gray-500 dark:text-gray-400 h-64 flex items-center justify-center">
                                 <div class="max-w-sm">
                                     <i data-lucide="file-text" class="h-12 w-12 mx-auto mb-4 text-gray-400"></i>
-                                    <p class="text-sm sm:text-base">Your AI-generated study notes will appear here</p>
+                                    <p>Your Notiq-generated study notes will appear here</p>
                                 </div>
                             </div>
                             <div id="notes-content" class="hidden">
                                 <div id="notes-text"
-                                    class="prose dark:prose-invert max-w-none bg-gray-50 dark:bg-gray-700 p-4 sm:p-6 rounded-xl overflow-auto text-sm sm:text-base">
+                                    class="prose dark:prose-invert max-w-none bg-gray-50 dark:bg-gray-700 p-6 rounded-xl overflow-auto">
                                 </div>
                             </div>
                         </div>
@@ -681,13 +678,13 @@
 
             // Initialize markdown-it
             window.md = window.markdownit({
-                html: true,
+                html: false,
                 linkify: true,
                 typographer: true,
                 highlight: function (str, lang) {
                     if (lang && hljs.getLanguage(lang)) {
                         try {
-                            return hljs.highlight(str, { language: lang }).value;
+                            return hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
                         } catch (__) { }
                     }
                     return ''; // use external default escaping
@@ -906,7 +903,7 @@
         // Generate notes using server
         async function generateNotesWithServer(subject, topics, studyType) {
             try {
-                const response = await fetch('/.netlify/functions/generate-notes', {
+                const response = await fetch('/api/generate-notes', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -969,7 +966,7 @@
 
                 // Apply syntax highlighting to code blocks
                 document.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightBlock(block);
+                    hljs.highlightElement(block);
                 });
 
                 currentNotes = notes;
@@ -985,7 +982,7 @@
                 document.getElementById('empty-state').classList.remove('hidden');
             } finally {
                 generateBtn.disabled = false;
-                generateBtn.textContent = 'Generate Notes';
+                generateBtn.textContent = 'Generate Notiq Notes';
             }
         }
 
